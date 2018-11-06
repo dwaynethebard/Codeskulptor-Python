@@ -11,6 +11,7 @@ enemy_bullets = []
 enemy_ships = []
 playing = True
 shooting = False
+score = 0
 # Load players ship and information
 player_image = simplegui.load_image("https://res.cloudinary.com/teepublic/image/private/s--30ToqKwE--/t_Preview/b_rgb:191919,c_limit,f_jpg,h_630,q_90,w_630/v1446229133/production/designs/219162_1.jpg")
 PLAYER_IMG_WIDTH = player_image.get_width()
@@ -146,7 +147,7 @@ def key_up(key):
 # Handler to draw on canvas
 def draw(canvas):
     # Draw the boarder
-    global playing , ship
+    global playing , ship, score
     canvas.draw_polyline([[50, 50], [750, 50], [750, 550],[50,550],[50,50]], 20, 'Blue')
     if playing:
         global player_bullets, time,enemy_bullets
@@ -162,6 +163,7 @@ def draw(canvas):
         for enemy in enemy_ships:
             for bullet in player_bullets:
                 if enemy.has_collided(bullet):
+                    score+=100
                     enemy_ships.remove(enemy)
                     player_bullets.remove(bullet)
                     
@@ -206,19 +208,21 @@ def draw(canvas):
         # Remove bullets from list once they are out of the screen
         player_bullets = filter(lambda bullet: (bullet.pos[1]<535 and bullet.pos[1]>65 and bullet.pos[0]<735 and bullet.pos[0]>65), player_bullets)
         enemy_bullets = filter(lambda bullet: (bullet.pos[1]<535 and bullet.pos[1]>65 and bullet.pos[0]<735 and bullet.pos[0]>65), enemy_bullets)
-
+        
         
     else:
         canvas.draw_text('GAME OVER', (300, 300),48, 'Red')
+    canvas.draw_text(str(score),[80,600],48,"Red")
 
 def start():
-    global playing , enemy_ships,player_bullets,enemy_bullets , ship
+    global playing , enemy_ships,player_bullets,enemy_bullets , ship, score
     enemy_bullets = []
     player_bullets = []
     enemy_ships = []
     ship.pos[0]=410
     ship.pos[1]=450
     playing = True
+    score = 0
     
 ship = Player(player_image,[410,450],[0,0],PLAYER_IMG_HEIGHT,PLAYER_IMG_WIDTH)
 
